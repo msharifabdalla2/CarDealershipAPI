@@ -1,13 +1,12 @@
 package com.example.CarDealershipAPI.Dealer;
 
-import com.example.CarDealershipAPI.Car.Car;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.CarDealershipAPI.Dealership.Dealership;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
-import java.util.List;
 
 @Entity
+@Table(name = "dealers")
 public class Dealer {
 
     @Id
@@ -15,17 +14,18 @@ public class Dealer {
     private Integer id;
 
     @Column
-    @NotBlank(message = "Name is mandatory")
     private String name;
 
-    @OneToMany(
-            mappedBy = "dealer"
+    @ManyToOne
+    @JoinColumn(
+            name = "dealerships_id" // Foreign key for the dealership
     )
-    @JsonManagedReference
-    private List<Car> cars;
+    @JsonIgnoreProperties({"cars","dealers"}) // Ignore the dealers and cars list in Dealership class to avoid circular reference
+    private Dealership dealership;
 
-    public Dealer(String name) {
+    public Dealer(String name, Dealership dealership) {
         this.name = name;
+        this.dealership = dealership;
     }
 
     public Dealer() {
@@ -36,7 +36,7 @@ public class Dealer {
         return id;
     }
 
-    public void setId(Integer id){
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -48,11 +48,16 @@ public class Dealer {
         this.name = name;
     }
 
-    public List<Car> getCars() {
-        return cars;
+    public Dealership getDealership() {
+        return dealership;
     }
 
-    public void setCars(List<Car> cars) {
-        this.cars = cars;
+    public void setDealership(Dealership dealership) {
+        this.dealership = dealership;
+    }
+
+    @Override
+    public String toString() {
+        return "Dealer{id=" + id + ", name='" + name + "', dealership=" + dealership.getName() + "}";
     }
 }
