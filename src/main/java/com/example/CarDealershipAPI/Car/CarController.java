@@ -15,7 +15,7 @@ public class CarController {
 
     private final CarService carService;
 
-    public CarController(CarService carService, CarRepository carRepository) {
+    public CarController(CarService carService) {
         this.carService = carService;
     }
 
