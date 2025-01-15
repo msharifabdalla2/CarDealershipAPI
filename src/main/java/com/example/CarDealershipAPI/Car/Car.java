@@ -1,12 +1,15 @@
 package com.example.CarDealershipAPI.Car;
 
 import com.example.CarDealershipAPI.Dealer.Dealer;
+import com.example.CarDealershipAPI.Dealership.Dealership;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name = "car")
+@Table(name = "cars")
+@JsonIgnoreProperties({"dealer", "dealership"}) // Prevents cyclic serialization
 public class Car {
 
     @Id
@@ -35,28 +38,21 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(
-            name = "dealer_id"
+            name = "dealerships_id"
     )
-    @JsonBackReference
-    private Dealer dealer;
+    @JsonIgnoreProperties({"cars", "dealers"}) // Prevent cyclic reference serialization on Dealership's cars and dealers field
+    private Dealership dealership;
 
-    public Car(String make, String model, Integer year, Integer price) {
+    public Car(String make, String model, Integer year, Integer price, Dealership dealership) {
         this.make = make;
         this.model = model;
         this.year = year;
         this.price = price;
+        this.dealership = dealership;
     }
 
     public Car() {
 
-    }
-
-    public Dealer getDealer() {
-        return dealer;
-    }
-
-    public void setDealer(Dealer dealer) {
-        this.dealer = dealer;
     }
 
     public Integer getId() {
@@ -97,6 +93,14 @@ public class Car {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Dealership getDealership() {
+        return dealership;
+    }
+
+    public void setDealership(Dealership dealership) {
+        this.dealership = dealership;
     }
 
     @Override
