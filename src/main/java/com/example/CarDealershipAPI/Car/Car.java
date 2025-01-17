@@ -1,8 +1,6 @@
 package com.example.CarDealershipAPI.Car;
 
-import com.example.CarDealershipAPI.Dealer.Dealer;
 import com.example.CarDealershipAPI.Dealership.Dealership;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -38,7 +36,7 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(
-            name = "dealerships_id"
+            name = "dealerships_id" // Foreign key for the dealership
     )
     @JsonIgnoreProperties({"cars", "dealers"}) // Prevent cyclic reference serialization on Dealership's cars and dealers field
     private Dealership dealership;

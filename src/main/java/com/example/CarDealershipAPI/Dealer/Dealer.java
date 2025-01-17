@@ -1,9 +1,9 @@
 package com.example.CarDealershipAPI.Dealer;
 
 import com.example.CarDealershipAPI.Dealership.Dealership;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "dealers")
@@ -14,6 +14,7 @@ public class Dealer {
     private Integer id;
 
     @Column
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @ManyToOne
