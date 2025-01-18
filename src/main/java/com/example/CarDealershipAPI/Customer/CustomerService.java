@@ -1,24 +1,52 @@
 package com.example.CarDealershipAPI.Customer;
 
+import com.example.CarDealershipAPI.Dealership.DealershipRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final DealershipRepository dealershipRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, DealershipRepository dealershipRepository) {
         this.customerRepository = customerRepository;
+        this.dealershipRepository = dealershipRepository;
     }
 
+    // Create (POST)
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
 
-    // Create
+    // Read (GET)
+    public List<Customer> getCustomerAndByName(String name) {
+        if (name != null) {
+            return customerRepository.getCustomerByName(name);
+        } else {
+            return customerRepository.findAll();
+        }
+    }
 
-    // Read
+    public Optional<Customer> getCustomerById(Integer id) {
+        return customerRepository.findById(id);
+    }
 
-    // Update
+    // Update (PUT)
 
     // Delete
+    public boolean deleteCustomerById(Integer id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (customer.isPresent()) {
+            dealershipRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
 
 
 }

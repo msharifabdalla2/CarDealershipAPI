@@ -20,7 +20,7 @@ public class DealershipService {
     }
 
 
-    // Read
+    // Read (GET)
     public List<Dealership> getAllDealershipsByNameAndLocation(String name, String location) {
         if (name != null && location != null) {
             return dealershipRepository.findByNameContainingAndLocation(name , location);
@@ -37,7 +37,7 @@ public class DealershipService {
         return dealershipRepository.findById(id);
     }
 
-    // Update
+    // Update (PUT)
 
     // Delete
     public boolean deleteDealershipById(Integer id) {
