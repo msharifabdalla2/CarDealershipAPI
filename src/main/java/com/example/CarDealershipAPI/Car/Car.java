@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "cars")
-@JsonIgnoreProperties({"dealer", "dealership"}) // Prevents cyclic serialization
+@JsonIgnoreProperties({"dealers"}) // Prevents cyclic serialization
 public class Car {
 
     @Id

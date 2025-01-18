@@ -2,6 +2,10 @@ package com.example.CarDealershipAPI.Purchase;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PurchaseService {
 
@@ -12,10 +16,33 @@ public class PurchaseService {
     }
 
     // Create
+    public Purchase createPurchase(Purchase purchase) {
+        return purchaseRepository.save(purchase);
+    }
 
     // Read
+    public List<Purchase> getAllPurchasedCarsByDate(LocalDate date) {
+        if(date !=null) {
+            return purchaseRepository.findByDate(date);
+        } else {
+            return purchaseRepository.findAll();
+        }
+    }
+
+    public Optional<Purchase> getPurchaseById(Integer id) {
+        return purchaseRepository.findById(id);
+    }
 
     // Update
 
     // Delete
+    public boolean deletePurchaseById(Integer id) {
+        Optional<Purchase> purchase = purchaseRepository.findById(id);
+
+        if(purchase.isPresent()) {
+            purchaseRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

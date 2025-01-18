@@ -61,7 +61,4 @@ public class DealershipController {
             return new ResponseEntity<>("Failed to delete Dealership ID: " + dealershipId, HttpStatus.NOT_FOUND);
         }
     }
-
-
-
 }
