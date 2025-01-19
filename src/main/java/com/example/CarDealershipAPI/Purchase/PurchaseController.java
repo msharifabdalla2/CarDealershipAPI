@@ -47,6 +47,17 @@ public class PurchaseController {
     }
 
     // PUT
+    @PutMapping("/api/purchases/{purchase-id}")
+    public ResponseEntity<Purchase> updatePurchase(
+            @PathVariable("purchase-id") Integer purchaseId,
+            @RequestBody Purchase newPurchase
+    ){
+        Optional<Purchase> updatedPurchase = purchaseService.updatePurchase(newPurchase, purchaseId);
+
+        return updatedPurchase
+                .map(purchase -> new ResponseEntity<>(purchase, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     // DELETE
     @DeleteMapping("/api/purchases/{purchase-id}")

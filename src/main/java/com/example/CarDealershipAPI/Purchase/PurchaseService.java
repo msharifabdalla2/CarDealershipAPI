@@ -34,6 +34,15 @@ public class PurchaseService {
     }
 
     // Update
+    public Optional<Purchase> updatePurchase(Purchase newPurchase, Integer id) {
+        return purchaseRepository.findById(id)
+                .map(existingPurchase -> {
+                    existingPurchase.setCarPurchased((newPurchase.getCarPurchased()));
+                    existingPurchase.setCustomer((newPurchase.getCustomer()));
+                    existingPurchase.setDate(newPurchase.getDate());
+                    return purchaseRepository.save(existingPurchase);
+                });
+    }
 
     // Delete
     public boolean deletePurchaseById(Integer id) {
