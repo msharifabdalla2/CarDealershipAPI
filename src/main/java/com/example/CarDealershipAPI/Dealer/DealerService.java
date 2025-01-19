@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class DealerService {
@@ -40,7 +41,20 @@ public class DealerService {
     }
 
     // Update
+    public Optional<Dealer> updateDealer(Integer id, Dealer newDealer){
 
+        var foundDealer = dealerRepository.findById(id);
+
+        if(foundDealer.isPresent()) {
+            Dealer foundDealerEntity = foundDealer.get();
+            foundDealerEntity.setName(newDealer.getName());
+            foundDealerEntity.setDealership(newDealer.getDealership());
+            dealerRepository.save(foundDealerEntity);
+
+            return Optional.of(foundDealerEntity);
+        }
+        return Optional.empty();
+    }
 
     // Delete
     public void deleteDealerById(Integer id) {

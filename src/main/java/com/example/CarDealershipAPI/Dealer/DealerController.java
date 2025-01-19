@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class DealerController {
@@ -46,7 +47,17 @@ public class DealerController {
     }
 
     // Update
+    @PutMapping("/api/dealers/{dealer-id}")
+    public ResponseEntity<Dealer> updateDealer(
+            @PathVariable("dealer-id") Integer id,
+            @RequestBody Dealer newDealer
+    ) {
+        Optional<Dealer> updatedDealer = dealerService.updateDealer(id, newDealer);
 
+        return updatedDealer
+                .map(dealer -> new ResponseEntity<>(dealer, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     // Delete
     @DeleteMapping("/api/dealers/{dealer-id}")
