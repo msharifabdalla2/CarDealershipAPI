@@ -3,6 +3,7 @@ package com.example.CarDealershipAPI.Car;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarService {
@@ -26,16 +27,24 @@ public class CarService {
     }
 
     // Update Car (PUT)
-    public Car updateCar(Integer id, Car updatedCar) {
-        return carRepository.findById(id)
-                .map(existingCar -> {
-                    existingCar.setMake(updatedCar.getMake());
-                    existingCar.setModel(updatedCar.getModel());
-                    existingCar.setYear(updatedCar.getYear());
-                    existingCar.setPrice(updatedCar.getPrice());
-                    return carRepository.save(existingCar);
-                })
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+    public Optional<Car> updateCar(Integer id, Car updatedCar) {
+
+        Optional<Car> foundCar = carRepository.findById(id);
+
+        if(foundCar.isPresent()) {
+            Car carToUpdate = foundCar.get();
+
+            carToUpdate.setMake(updatedCar.getMake());
+            carToUpdate.setModel(updatedCar.getModel());
+            carToUpdate.setYear(updatedCar.getYear());
+            carToUpdate.setPrice(updatedCar.getPrice());
+            carToUpdate.setDealership(updatedCar.getDealership());
+
+            carRepository.save(carToUpdate);
+            return Optional.of(carToUpdate);
+        } else {
+            return Optional.empty();
+        }
     }
 
     // Delete Car (DELETE)

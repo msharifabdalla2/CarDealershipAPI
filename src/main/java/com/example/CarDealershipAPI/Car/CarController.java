@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class CarController {
@@ -30,13 +31,17 @@ public class CarController {
     ) {
         return carService.saveCar(car);
     }
-
+    
     @PutMapping("/api/cars/{car-id}")
-    public Car updateCar(
+    public ResponseEntity<Car> updateCar(
             @PathVariable("car-id") Integer carId,
-            @Valid @RequestBody Car updatedCar
-    ) {
-        return carService.updateCar(carId, updatedCar);
+            @Valid @RequestBody Car newCar
+    ){
+        Optional<Car> updatedCar = carService.updateCar(carId, newCar);
+
+        return updatedCar
+                .map(car -> new ResponseEntity<>(car, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/api/cars/{car-id}")
