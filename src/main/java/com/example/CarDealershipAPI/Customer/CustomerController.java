@@ -46,6 +46,17 @@ public class CustomerController {
     }
 
     // Update (PUT)
+    @PutMapping("/api/customers/{customer-id}")
+    public ResponseEntity<Customer> updateCustomer(
+            @PathVariable("customer-id") Integer id,
+            @RequestBody Customer newCustomer
+    ){
+        Optional<Customer> updatedCustomer = customerService.updateCustomer(id, newCustomer);
+
+        return updatedCustomer
+                .map(customer -> new ResponseEntity<>(customer, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     // Delete
     @DeleteMapping("/api/customers/{customer-id}")

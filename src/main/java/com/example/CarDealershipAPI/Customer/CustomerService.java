@@ -36,6 +36,15 @@ public class CustomerService {
     }
 
     // Update (PUT)
+    public Optional <Customer> updateCustomer(Integer id, Customer newCustomer) {
+        return customerRepository.findById(id)
+                .map(exc -> {
+                    exc.setName(newCustomer.getName());
+                    exc.setEmailAddress(newCustomer.getEmailAddress());
+                    exc.setPurchases(newCustomer.getPurchases());
+                    return customerRepository.save(exc);
+                });
+    }
 
     // Delete
     public boolean deleteCustomerById(Integer id) {
