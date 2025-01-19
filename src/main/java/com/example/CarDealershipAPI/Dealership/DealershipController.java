@@ -47,6 +47,17 @@ public class DealershipController {
     }
 
     // PUT
+    @PutMapping("/api/dealerships/{dealership-id}")
+    public ResponseEntity<Dealership> updateDealership(
+            @PathVariable("dealership-id") Integer dealershipId,
+            @RequestBody Dealership newDealership
+    ){
+        Optional<Dealership> updateDealership = dealershipService.updateDealership(dealershipId, newDealership);
+
+        return updateDealership
+                .map(dealership -> new ResponseEntity<>(dealership, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     // Delete
     @DeleteMapping("/api/dealerships/{dealership-id}")

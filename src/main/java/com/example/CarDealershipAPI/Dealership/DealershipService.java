@@ -38,6 +38,25 @@ public class DealershipService {
     }
 
     // Update (PUT)
+    public Optional<Dealership> updateDealership(Integer id, Dealership newDealership) {
+
+        var foundDealership = dealershipRepository.findById(id);
+
+        if (foundDealership.isPresent()){
+            Dealership foundDealershipEntity = foundDealership.get();
+
+            foundDealershipEntity.setName(newDealership.getName());
+            foundDealershipEntity.setLocation(newDealership.getLocation());
+            foundDealershipEntity.setCars(newDealership.getCars());
+            foundDealershipEntity.setDealers(newDealership.getDealers());
+
+            dealershipRepository.save(foundDealershipEntity);
+
+            return Optional.of(foundDealershipEntity);
+        } else {
+            return Optional.empty();
+        }
+    }
 
     // Delete
     public boolean deleteDealershipById(Integer id) {
