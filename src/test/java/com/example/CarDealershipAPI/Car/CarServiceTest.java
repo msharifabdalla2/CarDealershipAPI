@@ -1,5 +1,6 @@
 package com.example.CarDealershipAPI.Car;
 
+import com.example.CarDealershipAPI.Dealership.Dealership;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +22,6 @@ class CarServiceTest {
     @Mock
     private CarRepository carRepository;
 
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -30,11 +30,14 @@ class CarServiceTest {
     @Test
     public void testSaveCar() {
         // Given
+        Dealership dealership = new Dealership("Toyota Dealership", "123 Main St");
+
         Car car = new Car(
                 "Toyota",
                 "S Series",
                 2019,
-                20000
+                20000,
+                dealership
         );
 
         // Mocks
@@ -54,24 +57,26 @@ class CarServiceTest {
     @Test
     public void testGetAllCarsWhichShouldReturnListOfCars() {
         // Given
+        Dealership dealership = new Dealership("Toyota Dealership", "123 Main St");
+
         List<Car> cars = List.of(
-                new Car("Toyota", "S Series", 2019, 20000),
-                new Car("Toyota", "Corolla", 2020, 18000),
-                new Car("Honda", "Civic", 2019, 20000),
-                new Car("Ford", "Focus", 2021, 22000),
-                new Car("Chevrolet", "Malibu", 2018, 17000),
-                new Car("Nissan", "Altima", 2022, 25000),
-                new Car("Hyundai", "Elantra", 2020, 19000),
-                new Car("Kia", "Optima", 2019, 18500),
-                new Car("Volkswagen", "Jetta", 2021, 21000),
-                new Car("Subaru", "Impreza", 2018, 16000),
-                new Car("Mazda", "Mazda3", 2020, 20000),
-                new Car("BMW", "3 Series", 2021, 35000),
-                new Car("Audi", "A4", 2022, 37000),
-                new Car("Mercedes-Benz", "C-Class", 2020, 40000),
-                new Car("Lexus", "IS", 2021, 42000),
-                new Car("Acura", "TLX", 2019, 32000),
-                new Car("Tesla", "Model 3", 2022, 45000)
+                new Car("Toyota", "S Series", 2019, 20000, dealership),
+                new Car("Toyota", "Corolla", 2020, 18000, dealership),
+                new Car("Honda", "Civic", 2019, 20000, dealership),
+                new Car("Ford", "Focus", 2021, 22000, dealership),
+                new Car("Chevrolet", "Malibu", 2018, 17000, dealership),
+                new Car("Nissan", "Altima", 2022, 25000, dealership),
+                new Car("Hyundai", "Elantra", 2020, 19000, dealership),
+                new Car("Kia", "Optima", 2019, 18500, dealership),
+                new Car("Volkswagen", "Jetta", 2021, 21000, dealership),
+                new Car("Subaru", "Impreza", 2018, 16000, dealership),
+                new Car("Mazda", "Mazda3", 2020, 20000, dealership),
+                new Car("BMW", "3 Series", 2021, 35000, dealership),
+                new Car("Audi", "A4", 2022, 37000, dealership),
+                new Car("Mercedes-Benz", "C-Class", 2020, 40000, dealership),
+                new Car("Lexus", "IS", 2021, 42000, dealership),
+                new Car("Acura", "TLX", 2019, 32000, dealership),
+                new Car("Tesla", "Model 3", 2022, 45000, dealership)
         );
 
         // Mocks
@@ -93,11 +98,13 @@ class CarServiceTest {
         // Given
         Integer id = 1;
 
-        Car existingCar = new Car("Toyota", "S Series", 2019, 20000);
+        Dealership dealership = new Dealership("Toyota Dealership", "123 Main St");
+        Dealership updatedDealership = new Dealership("BMW Dealership", "456 Oak Rd");
 
+        Car existingCar = new Car("Toyota", "S Series", 2019, 20000, dealership);
         existingCar.setId(id);
 
-        Car updatedCar = new Car("BMW", "3 Series", 2021, 35000);
+        Car updatedCar = new Car("BMW", "3 Series", 2021, 35000, updatedDealership);
 
         // Mocks
         when(carRepository.findById(id))
@@ -109,11 +116,12 @@ class CarServiceTest {
         var newCar = carService.updateCar(id, updatedCar);
 
         // Then
-        assertNotNull(newCar);
-        assertEquals("BMW", newCar.getMake());
-        assertEquals("3 Series", newCar.getModel());
-        assertEquals(2021, newCar.getYear());
-        assertEquals(35000, newCar.getPrice());
+        assertTrue(newCar.isPresent());
+        assertEquals("BMW", newCar.get().getMake());
+        assertEquals("3 Series", newCar.get().getModel());
+        assertEquals(2021, newCar.get().getYear());
+        assertEquals(35000, newCar.get().getPrice());
+        assertEquals(updatedDealership, newCar.get().getDealership()); // Verifying dealership update
 
         // Verify
         verify(carRepository, times(1)).findById(id);
@@ -126,7 +134,10 @@ class CarServiceTest {
         // Given
         Integer id = 1;
 
-        Car existingCar = new Car("Toyota", "S Series", 2019, 20000);
+        Dealership dealership = new Dealership("Toyota Dealership", "123 Main St");
+
+        Car existingCar = new Car("Toyota", "S Series", 2019, 20000, dealership);
+        existingCar.setId(id);
 
         // Mocks
         doNothing().when(carRepository).deleteById(id);
@@ -147,7 +158,7 @@ class CarServiceTest {
         // Arrange
         Integer carId = 999; // Non-existent car ID
 
-        // Mocking: Simulate an exception when deleteById is called
+        // Mocking
         doThrow(new RuntimeException("Car not found")).when(carRepository).deleteById(carId);
 
         // Act & Assert
@@ -155,7 +166,7 @@ class CarServiceTest {
 
         assertEquals("Car not found", thrown.getMessage());
 
-        // Verify that deleteById was called exactly once with the given carId
+        // Verify
         verify(carRepository, times(1)).deleteById(carId);
     }
 
@@ -167,26 +178,10 @@ class CarServiceTest {
         Integer year = 2020;
         Integer price = 25000;
 
+        Dealership dealership = new Dealership("Toyota Dealership", "123 Main St");
+
         List<Car> cars = List.of(
-                new Car("Toyota", "S Series", 2019, 20000),
-                new Car("Toyota", "Corolla", 2020, 18000),
-                new Car("Honda", "Civic", 2019, 20000),
-                new Car("Ford", "Focus", 2021, 22000),
-                new Car("Chevrolet", "Malibu", 2018, 17000),
-                new Car("Nissan", "Altima", 2022, 25000),
-                new Car("Hyundai", "Elantra", 2020, 19000),
-                new Car("Kia", "Optima", 2019, 18500),
-                new Car("Volkswagen", "Jetta", 2021, 21000),
-                new Car("Subaru", "Impreza", 2018, 16000),
-                new Car("Mazda", "Mazda3", 2020, 20000),
-                new Car("BMW", "3 Series", 2021, 35000),
-                new Car("Audi", "A4", 2022, 37000),
-                new Car("Mercedes-Benz", "C-Class", 2020, 40000),
-                new Car("Lexus", "IS", 2021, 42000),
-                new Car("Acura", "TLX", 2019, 32000),
-                new Car("Tesla", "Model 3", 2022, 45000),
-                new Car("Toyota", "Camry", 2020, 25000),
-                new Car("Toyota", "Corolla", 2021, 22000)
+                new Car("Toyota", "Camry", 2020, 25000, dealership)
         );
 
         // Mocks
@@ -198,9 +193,13 @@ class CarServiceTest {
 
         // Then
         assertNotNull(filteredCars);
-        assertEquals(19, filteredCars.size());
-        assertEquals("Toyota", filteredCars.get(17).getMake());
-        assertEquals("Camry", filteredCars.get(17).getModel());
+        assertEquals(1, filteredCars.size());  // Only one car matches the filter
+        assertEquals("Toyota", filteredCars.get(0).getMake());
+        assertEquals("Camry", filteredCars.get(0).getModel());
+        assertEquals(Integer.valueOf(2020), filteredCars.get(0).getYear());
+        assertEquals(Integer.valueOf(25000), filteredCars.get(0).getPrice());
+        assertEquals("Toyota Dealership", filteredCars.get(0).getDealership().getName());
+        assertEquals("123 Main St", filteredCars.get(0).getDealership().getLocation());
 
         // Verify
         verify(carRepository, times(1))
