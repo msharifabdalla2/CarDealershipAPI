@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 class DealerServiceTest {
@@ -152,4 +153,28 @@ class DealerServiceTest {
     }
 
     @Test
+    public void testDeleteDealer() {
+        // Given
+        Integer id = 1;
+
+        Dealer dealer = new Dealer("John Doe",
+                new Dealership("BMW Dealership", "London")
+        );
+
+        dealer.setId(id);
+
+        // Mocks
+        when(dealerRepository.findById(id))
+                .thenReturn(Optional.of(dealer));
+        doNothing().when(dealerRepository)
+                .delete(dealer);
+
+        // When
+        dealerService.deleteDealerById(id);
+
+        // Then
+        // No assertion as the method is void
+
+        // Verify
+    }
 }
