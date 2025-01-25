@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -94,4 +95,61 @@ class DealerServiceTest {
         // Verify
 
     }
+
+    @Test
+    public void testGetDealerById() {
+        // Given
+        Integer id = 1;
+        Dealer dealer = new Dealer(
+                "John Doe",
+                new Dealership("BMW Dealership", "London"));
+
+        dealer.setId(id);
+
+        // Mocks
+        when(dealerRepository.findById(id))
+                .thenReturn(Optional.of(dealer));
+
+        // When
+        Dealer dealerById = dealerService.getDealerById(id);
+
+        // Then
+        assertEquals(dealer, dealerById);
+
+        // Verify
+    }
+
+    @Test
+    public void testUpdateDealer() {
+        // Given
+        Integer id = 1;
+        Dealer existingDealer = new Dealer(
+                "John Doe",
+                new Dealership("BMW Dealership", "London")
+        );
+
+        Dealer updatedDealer = new Dealer("Jane Doe",
+                new Dealership("Audi Dealership", "Berlin")
+        );
+
+        existingDealer.setId(id);
+
+        // Mocks
+        when(dealerRepository.findById(id))
+                .thenReturn(Optional.of(existingDealer));
+        when(dealerRepository.save(existingDealer))
+                .thenReturn(updatedDealer);
+
+        // When
+        Optional<Dealer> result = dealerService.updateDealer(id, updatedDealer);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(updatedDealer.getName(), result.get().getName());
+        assertEquals(updatedDealer.getDealership(), result.get().getDealership());
+
+        // Verify
+    }
+
+    @Test
 }
