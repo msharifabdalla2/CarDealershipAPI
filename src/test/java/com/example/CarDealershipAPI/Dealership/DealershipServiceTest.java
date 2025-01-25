@@ -152,7 +152,7 @@ class DealershipServiceTest {
         when(dealershipRepository.findById(id))
                 .thenReturn(Optional.of(initialDealership));
         when(dealershipRepository.save(initialDealership))
-                .thenReturn(initialDealership); // Check this before moving on
+                .thenReturn(updatedDealership); // Check this before moving on
 
         // When
         var newDealership = dealershipService.updateDealership(id, updatedDealership);
