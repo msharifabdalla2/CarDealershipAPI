@@ -1,7 +1,6 @@
 package com.example.CarDealershipAPI.Dealer;
 
 import com.example.CarDealershipAPI.Dealership.Dealership;
-import com.example.CarDealershipAPI.Dealership.DealershipRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
