@@ -80,7 +80,7 @@ class DealerServiceTest {
         assertNotNull(filteredDealers);
         assertEquals(2, filteredDealers.size());
         assertEquals("John Doe", filteredDealers.get(0).getName());
-        assertEquals("BMW Dealership", filteredDealers.get(0).getName());
+        assertEquals("BMW Dealership", filteredDealers.get(0).getDealership().getName());
 
         assertNotNull(nameOnlyDealers);
         assertEquals(2, nameOnlyDealers.size());
