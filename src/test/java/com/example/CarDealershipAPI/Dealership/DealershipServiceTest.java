@@ -58,6 +58,8 @@ class DealershipServiceTest {
                 "123 Main St"
         );
 
+        dealership.setId(id);
+
         // Mocks
         when(dealershipRepository.findById(id))
                 .thenReturn(Optional.of(dealership));
