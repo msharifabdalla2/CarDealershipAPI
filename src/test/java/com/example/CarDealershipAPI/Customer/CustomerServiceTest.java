@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 class CustomerServiceTest {
@@ -99,6 +99,44 @@ class CustomerServiceTest {
 
         // Verify
 //      verify(customerRepository, times(1)).findById(id);
+    }
+
+    @Test
+    public void testUpdateCustomer() {
+        // Given
+        Integer id = 1;
+        Customer existingCustomer = new Customer(
+                "John Doe",
+                "johndoe@example.com"
+        );
+        existingCustomer.setId(id);
+
+        Customer updatedCustomer = new Customer(
+                "John Smith",
+                "johnsmith@example.com"
+        );
+
+
+        // Mocks
+        when(customerRepository.findById(id))
+                .thenReturn(Optional.of(existingCustomer));
+
+        when(customerRepository.save(existingCustomer))
+                .thenReturn(updatedCustomer);
+
+        // When
+        Optional<Customer> result = customerService.updateCustomer(id, updatedCustomer);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals("John Smith", result.get().getName());
+        assertEquals("johnsmith@example.com", result.get().getEmailAddress());
+
+        // Verify
+        verify(customerRepository,times(1))
+                .findById(id);
+        verify(customerRepository, times(1))
+                .save(existingCustomer);
     }
 
 
