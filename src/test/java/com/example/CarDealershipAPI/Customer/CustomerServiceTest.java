@@ -139,5 +139,36 @@ class CustomerServiceTest {
                 .save(existingCustomer);
     }
 
+    @Test
+    public void testDeleteCustomer() {
+        // Given
+        Integer id = 1;
+
+        Customer customerToDelete = new Customer(
+                "John Doe",
+                "johndoe@example.com"
+        );
+
+        customerToDelete.setId(id);
+
+        // Mocks
+        when(customerRepository.findById(id))
+                .thenReturn(Optional.of(customerToDelete));
+        doNothing().when(customerRepository)
+                .delete(customerToDelete);
+
+        // When
+        boolean result = customerService.deleteCustomerById(id);
+
+        // Then
+        assertTrue(result);
+
+        // Verify
+        verify(customerRepository, times(1))
+                .findById(id);
+        verify(customerRepository, times(1))
+                .deleteById(customerToDelete.getId());
+    }
+
 
 }
