@@ -46,6 +46,8 @@ class CustomerServiceTest {
         assertEquals(customer, savedCustomer);
 
         // Verify
+        verify(customerRepository, times(1))
+                .save(customer);
     }
 
     @Test
@@ -76,6 +78,10 @@ class CustomerServiceTest {
         assertEquals(1, allCustomers.size());
 
         // Verify
+        verify(customerRepository, times(1))
+                .getCustomerByName(name);
+        verify(customerRepository, times(1))
+                .findAll();
     }
 
     @Test
@@ -98,7 +104,8 @@ class CustomerServiceTest {
         assertEquals("John Doe", foundCustomer.get().getName());
 
         // Verify
-//      verify(customerRepository, times(1)).findById(id);
+        verify(customerRepository, times(1))
+                .findById(id);
     }
 
     @Test
@@ -169,6 +176,4 @@ class CustomerServiceTest {
         verify(customerRepository, times(1))
                 .deleteById(customerToDelete.getId());
     }
-
-
 }
