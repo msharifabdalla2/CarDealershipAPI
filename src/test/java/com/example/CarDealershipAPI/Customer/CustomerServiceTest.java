@@ -27,7 +27,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    public void testCreateCustomer() {
+    public void testSaveCustomer() {
         // Given
         Customer customer = new Customer(
                 "John Doe",
