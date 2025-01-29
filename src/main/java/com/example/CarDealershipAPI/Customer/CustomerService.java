@@ -50,7 +50,7 @@ public class CustomerService {
     public boolean deleteCustomerById(Integer id) {
         Optional<Customer> customer = customerRepository.findById(id);
         if (customer.isPresent()) {
-            dealershipRepository.deleteById(id);
+            customerRepository.deleteById(id);
             return true;
         }
         return false;
