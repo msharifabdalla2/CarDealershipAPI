@@ -56,5 +56,4 @@ public class CarService {
     public List<Car> getFilteredCars(String make, String model, Integer year, Integer price) {
         return carRepository.findByFilters(make, model, year, price);
     }
-
 }
