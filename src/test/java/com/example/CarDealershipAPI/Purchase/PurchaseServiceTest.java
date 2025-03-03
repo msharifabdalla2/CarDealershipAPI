@@ -179,14 +179,4 @@ class PurchaseServiceTest {
         verify(purchaseRepository, times(1))
                 .findById(id);
     }
-
-    // Given
-
-    // Mocks
-
-    // When
-
-    // Then
-
-    // Verify
 }
