@@ -40,7 +40,7 @@ Ensure your `application.properties` file contains the following configuration:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/car_dealership
 spring.datasource.username=postgres
-spring.datasource.password=2309
+spring.datasource.password=#####
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.hibernate.ddl-auto=create-drop
